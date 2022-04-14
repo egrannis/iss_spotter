@@ -30,9 +30,9 @@ const fetchMyIP = function(callback) { //function of error and IP. Passes an err
 };
 
 
-const fetchCoordsByIP = function (ip, callback) {
+const fetchCoordsByIP = function(ip, callback) {
   const URL = `https://freegeoip.app/json/${ip}`;
-  request(URL), (error, response, body) => {
+  request(URL, (error, response, body) => {
     if (error) {
       return callback(error, null);
     }
@@ -41,14 +41,17 @@ const fetchCoordsByIP = function (ip, callback) {
       callback(Error(`Status Code ${response.statusCode} when fetching Coordinates for IP: ${body}`), null);
       return;
     }
-  const { lat , long } = JSON.parse(body);
+    let data = JSON.parse(body);   // OR can do - const { latitude, longitude } = JSON.parse(body);
+    const latitude = data.latitude;
+    const longitude = data.longitude;
+    const coordinates = {latitude, longitude};
 
-  callback(null, { lat, long });
-  
-});
+    callback(null, coordinates);
+
+  });
 };
 
-module.exports = { 
-fetchMyIP,
-fetchCoordsByIP 
+module.exports = {
+  fetchMyIP,
+  fetchCoordsByIP
 };
