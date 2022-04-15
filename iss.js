@@ -56,21 +56,33 @@ const fetchISSFlyOverTimes = function(coords, callback) {
       return callback(Error((`Status Code ${response.statusCode} when fetching Coordinates for IP: ${body}`), null));
     }
 
-    const flyOvers = JSON.parse(body).response;
-    callback(null, flyOvers);
+    const flyOverTimes = JSON.parse(body).response;
+    callback(null, flyOverTimes);
   });
 };
 
-const nextISSTimesForMyLocation = function () {
-  
-}
+///
 
+const nextISSTimesForMyLocation = function(callback) {
+  fetchMyIP((error, ip) => {
+    if (error) {
+      return callback(error, null);
+    }
 
+    fetchCoordsByIP(ip, (error, coordinates) => {
+      if (error) {
+        return callback(error, null);
+      }
 
+      fetchISSFlyOverTimes(coordinates, (error, flyOverTimes) => {
+        if (error) {
+          return callback(error, null);
+        }
 
-
-module.exports = {
-  fetchMyIP,
-  fetchCoordsByIP,
-  fetchISSFlyOverTimes
+        callback(null, flyOverTimes);
+      });
+    });
+  });
 };
+
+module.exports = { nextISSTimesForMyLocation };
