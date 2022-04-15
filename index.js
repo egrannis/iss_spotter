@@ -16,7 +16,7 @@ nextISSTimesForMyLocation((error, flyOverTimes) => {
   printFlyOverTimes(flyOverTimes);
 });
 
-// Older functions using callbacks
+/// Older functions using callbacks below ///
 
 // fetchMyIP((error, ip) => {
 //   if (error) {
