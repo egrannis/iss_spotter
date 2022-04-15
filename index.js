@@ -16,6 +16,7 @@ nextISSTimesForMyLocation((error, flyOverTimes) => {
   printFlyOverTimes(flyOverTimes);
 });
 
+module.exports = { printFlyOverTimes };
 /// Older functions using callbacks below ///
 
 // fetchMyIP((error, ip) => {

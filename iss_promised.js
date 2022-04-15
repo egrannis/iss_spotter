@@ -1,7 +1,7 @@
 // iss_promised.js
 const request = require('request-promise-native');
 
-const fetchMyIP = function () {
+const fetchMyIP = function() {
   return request('https://api.ipify.org?format=json');
 };
 
@@ -10,4 +10,21 @@ const fetchCoordsByIP = function(body) {
   return request(`https://freegeoip.app/json/${ip}`);
 };
 
-module.exports = { fetchMyIP, fetchCoordsByIP };
+const fetchISSFlyOverTimes = function(body) { //Input: JSON body containing geo data response from freegeoip.app
+  const { latitude, longitude } = JSON.parse(body);
+  const url = `http://api.open-notify.org/iss-pass.json?lat=${latitude}&lon=${longitude}`;
+  return request(url); // Returns: Promise of request for fly over data, returned as JSON strings
+};
+
+const nextISSTimesForMyLocation = function() {
+  return fetchMyIP()
+    .then(fetchCoordsByIP)
+    .then(fetchISSFlyOverTimes)
+    .then((data) => {
+      const {response} = JSON.parse(data);
+      return response;
+    });
+};
+
+
+module.exports = { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes, nextISSTimesForMyLocation };
